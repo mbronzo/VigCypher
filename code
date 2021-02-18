@@ -1,0 +1,79 @@
+plaintext = input('Enter the text you want to cypher: ')
+n_text = len(plaintext)
+alphabet = 'abcdefghijklmnopqrstuvwxyz'
+plaintext.lower()
+
+
+def stringalo(list):
+    str1 = ''
+    return (str1.join(list))
+
+
+while True:
+    key = input('Enter the key of your cypher, letters only are allowed: ')
+    key.lower()
+    n_key = len(key)
+    if key.isalpha():
+        break
+    print("Please enter characters A-Z only")
+
+longer_key = []
+n_longerkey = len(longer_key)
+s = 0
+while n_longerkey < n_text:
+    for i in range(len(plaintext)):
+        if plaintext[i].isalpha():
+            k = i - ((i//len(key))*len(key))
+            try:
+                longer_key.append(key[k-s])
+                n_longerkey = len(longer_key)
+            except:
+                longer_key.append(key[k])
+                n_longerkey = len(longer_key)
+        else:
+            longer_key.append(plaintext[i])
+            n_longerkey = len(longer_key)
+            s += 1
+
+longer_key = stringalo(longer_key)
+
+delta_position = []
+new_pos = []
+for i in range(len(longer_key)):
+    if longer_key[i] in alphabet:
+        pos_key = int(alphabet.index(longer_key[i]) - alphabet.index('a'))
+        new_position = pos_key + alphabet.index(plaintext[i])
+        delta_position.append(pos_key)
+        new_pos.append(new_position)
+    else:
+        new_pos.append(longer_key[i])
+        delta_position.append(longer_key[i])
+
+encoded = ''
+for i in range(len(new_pos)):
+    try:
+        if isinstance(new_pos[i], int):
+            encoded_ch = alphabet[new_pos[i]]
+            encoded = encoded + encoded_ch
+        else:
+            encoded_ch = new_pos[i]
+            encoded = encoded + encoded_ch
+    except IndexError:
+        encoded_ch = alphabet[new_pos[i] - 26]
+        encoded = encoded + encoded_ch
+
+decoded = ''
+for i in range(len(encoded)):
+    try:
+        if isinstance(new_pos[i], int):
+            decoded_ch = alphabet[new_pos[i] - delta_position[i]]
+            decoded = decoded + decoded_ch
+        else:
+            decoded_ch = new_pos[i]
+            decoded = decoded + decoded_ch
+    except IndexError:
+        decoded_ch = alphabet[new_pos[i] - delta_position[i] - 26]
+        decoded = decoded + decoded_ch
+
+print('The encoded message is: ' + encoded)
+print('The decoded message is: ' + decoded)
